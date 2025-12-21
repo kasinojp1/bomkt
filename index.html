@@ -44,10 +44,10 @@ body {
 }
 .search-box input {
     padding: 8px;
-    width: 220px;
+    width: 240px;
 }
 .search-box button {
-    padding: 8px 12px;
+    padding: 8px 15px;
     cursor: pointer;
 }
 
@@ -74,14 +74,8 @@ select, input[type="number"] {
 .status-win { color: green; font-weight: bold; }
 .status-lose { color: red; font-weight: bold; }
 
-.jackpot-on {
-    color: green;
-    font-weight: bold;
-}
-.jackpot-off {
-    color: red;
-    font-weight: bold;
-}
+.jackpot-on { color: green; font-weight: bold; }
+.jackpot-off { color: red; font-weight: bold; }
 </style>
 </head>
 
@@ -103,7 +97,7 @@ select, input[type="number"] {
 <div class="content">
 
     <div class="search-box">
-        <input type="text" id="searchUser" placeholder="Masukkan Username">
+        <input type="text" id="usernameInput" placeholder="Masukkan Username">
         <button onclick="searchUser()">SEARCH</button>
     </div>
 
@@ -119,89 +113,72 @@ select, input[type="number"] {
                 <th>Setting Jackpot</th>
             </tr>
         </thead>
-        <tbody id="userTable"></tbody>
+        <tbody id="resultTable"></tbody>
     </table>
 
 </div>
 
 <script>
-const users = [
-    { username: "kamu1223" },
-    { username: "player01" },
-    { username: "member88" }
-];
-
 function searchUser() {
-    const keyword = document.getElementById("searchUser").value.toLowerCase();
-    const table = document.getElementById("userTable");
-    table.innerHTML = "";
+    const username = document.getElementById("usernameInput").value.trim();
+    const table = document.getElementById("resultTable");
 
-    users.forEach(user => {
-        if (user.username.toLowerCase().includes(keyword)) {
-            table.innerHTML += `
-            <tr>
-                <td>${user.username}</td>
-
-                <td>
-                    <select>
-                        <option>PRAGMATIC</option>
-                        <option>PG SOFT</option>
-                        <option>MICROGAMING</option>
-                        <option>HABANERO</option>
-                    </select>
-                </td>
-
-                <td>
-                    <select>
-                        <option>400</option>
-                        <option>800</option>
-                        <option>1000</option>
-                        <option>1600</option>
-                        <option>1800</option>
-                        <option>2000</option>
-                    </select>
-                </td>
-
-                <td>
-                    <select onchange="this.className=this.value">
-                        <option value="status-win">MENANG</option>
-                        <option value="status-lose">KALAH</option>
-                    </select>
-                </td>
-
-                <td>
-                    <input type="number" placeholder="Nominal Deposit">
-                </td>
-
-                <td>
-                    <select onchange="updateJackpot(this)">
-                        <option value="OFF">OFF</option>
-                        <option value="ON">ON</option>
-                    </select>
-                </td>
-
-                <td>
-                    <input type="number" placeholder="Nominal Jackpot">
-                    <select>
-                        <option>Manual</option>
-                        <option>Otomatis</option>
-                    </select>
-                </td>
-            </tr>`;
-        }
-    });
-
-    if (table.innerHTML === "") {
-        table.innerHTML = `<tr><td colspan="7">User tidak ditemukan</td></tr>`;
+    if (username === "") {
+        alert("Masukkan username terlebih dahulu");
+        return;
     }
-}
 
-function updateJackpot(select) {
-    if (select.value === "ON") {
-        select.className = "jackpot-on";
-    } else {
-        select.className = "jackpot-off";
-    }
+    table.innerHTML = `
+    <tr>
+        <td>${username}</td>
+
+        <td>
+            <select>
+                <option>PRAGMATIC</option>
+                <option>PG SOFT</option>
+                <option>MICROGAMING</option>
+                <option>HABANERO</option>
+                <option>JOKER</option>
+            </select>
+        </td>
+
+        <td>
+            <select>
+                <option>400</option>
+                <option>800</option>
+                <option>1000</option>
+                <option>1600</option>
+                <option>1800</option>
+                <option>2000</option>
+            </select>
+        </td>
+
+        <td>
+            <select onchange="this.className=this.value">
+                <option value="status-win">MENANG</option>
+                <option value="status-lose">KALAH</option>
+            </select>
+        </td>
+
+        <td>
+            <input type="number" placeholder="Nominal Deposit">
+        </td>
+
+        <td>
+            <select onchange="this.className = this.value === 'ON' ? 'jackpot-on' : 'jackpot-off'">
+                <option value="OFF">OFF</option>
+                <option value="ON">ON</option>
+            </select>
+        </td>
+
+        <td>
+            <input type="number" placeholder="Nominal Jackpot">
+            <select>
+                <option>Manual</option>
+                <option>Otomatis</option>
+            </select>
+        </td>
+    </tr>`;
 }
 </script>
 
