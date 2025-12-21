@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: #2f3542;
+    color: #fff;
+    position: fixed;
+    padding: 15px;
+}
+.sidebar h2 {
+    color: #fbc531;
+    text-align: center;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+.sidebar ul li:hover {
+    background: #57606f;
+}
+
+/* CONTENT */
+.content {
+    margin-left: 240px;
+    padding: 20px;
+}
+
+.search-box {
+    margin-bottom: 15px;
+}
+.search-box input {
+    padding: 8px;
+    width: 200px;
+}
+.search-box button {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+th {
+    background: #2f3542;
+    color: #fff;
+}
+
+select, input[type="number"] {
+    padding: 5px;
+}
+.status-win {
+    color: green;
+    font-weight: bold;
+}
+.status-lose {
+    color: red;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>MASTER</h2>
+    <ul>
+        <li>Dashboard</li>
+        <li>Deposit</li>
+        <li>Withdraw</li>
+        <li>Report</li>
+        <li>Users</li>
+        <li>Win / Lose</li>
+        <li>Web Setting</li>
+    </ul>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <div class="search-box">
+        <input type="text" id="searchUser" placeholder="Search Username">
+        <button onclick="searchUser()">SEARCH</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Provider</th>
+                <th>Taruhan</th>
+                <th>Status</th>
+                <th>Deposit</th>
+            </tr>
+        </thead>
+        <tbody id="userTable">
+            <!-- DATA MUNCUL DI SINI -->
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+const users = [
+    { username: "kamu1223" },
+    { username: "player01" },
+    { username: "member88" }
+];
+
+function searchUser() {
+    const keyword = document.getElementById("searchUser").value.toLowerCase();
+    const table = document.getElementById("userTable");
+    table.innerHTML = "";
+
+    users.forEach(user => {
+        if (user.username.toLowerCase().includes(keyword)) {
+            table.innerHTML += `
+            <tr>
+                <td>${user.username}</td>
+                <td>
+                    <select>
+                        <option>PRAGMATIC</option>
+                        <option>PG SOFT</option>
+                        <option>MICROGAMING</option>
+                        <option>HABANERO</option>
+                        <option>JOKER</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option>400</option>
+                        <option>800</option>
+                        <option>1000</option>
+                        <option>1600</option>
+                        <option>1800</option>
+                        <option>2000</option>
+                    </select>
+                </td>
+                <td>
+                    <select onchange="this.className=this.value">
+                        <option value="status-win">MENANG</option>
+                        <option value="status-lose">KALAH</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" placeholder="Nominal">
+                </td>
+            </tr>`;
+        }
+    });
+
+    if (table.innerHTML === "") {
+        table.innerHTML = `<tr><td colspan="5">User tidak ditemukan</td></tr>`;
+    }
+}
+</script>
+
+</body>
+</html>
