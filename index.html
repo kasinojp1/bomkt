@@ -10,7 +10,6 @@ body {
     background: #f4f6f8;
 }
 
-/* SIDEBAR */
 .sidebar {
     width: 220px;
     height: 100vh;
@@ -35,7 +34,6 @@ body {
     background: #57606f;
 }
 
-/* CONTENT */
 .content {
     margin-left: 240px;
     padding: 20px;
@@ -46,14 +44,13 @@ body {
 }
 .search-box input {
     padding: 8px;
-    width: 200px;
+    width: 220px;
 }
 .search-box button {
     padding: 8px 12px;
     cursor: pointer;
 }
 
-/* TABLE */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -71,12 +68,17 @@ th {
 
 select, input[type="number"] {
     padding: 5px;
+    width: 100%;
 }
-.status-win {
+
+.status-win { color: green; font-weight: bold; }
+.status-lose { color: red; font-weight: bold; }
+
+.jackpot-on {
     color: green;
     font-weight: bold;
 }
-.status-lose {
+.jackpot-off {
     color: red;
     font-weight: bold;
 }
@@ -85,7 +87,6 @@ select, input[type="number"] {
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
     <h2>MASTER</h2>
     <ul>
@@ -99,11 +100,10 @@ select, input[type="number"] {
     </ul>
 </div>
 
-<!-- CONTENT -->
 <div class="content">
 
     <div class="search-box">
-        <input type="text" id="searchUser" placeholder="Search Username">
+        <input type="text" id="searchUser" placeholder="Masukkan Username">
         <button onclick="searchUser()">SEARCH</button>
     </div>
 
@@ -115,11 +115,11 @@ select, input[type="number"] {
                 <th>Taruhan</th>
                 <th>Status</th>
                 <th>Deposit</th>
+                <th>Jackpot</th>
+                <th>Setting Jackpot</th>
             </tr>
         </thead>
-        <tbody id="userTable">
-            <!-- DATA MUNCUL DI SINI -->
-        </tbody>
+        <tbody id="userTable"></tbody>
     </table>
 
 </div>
@@ -141,15 +141,16 @@ function searchUser() {
             table.innerHTML += `
             <tr>
                 <td>${user.username}</td>
+
                 <td>
                     <select>
                         <option>PRAGMATIC</option>
                         <option>PG SOFT</option>
                         <option>MICROGAMING</option>
                         <option>HABANERO</option>
-                        <option>JOKER</option>
                     </select>
                 </td>
+
                 <td>
                     <select>
                         <option>400</option>
@@ -160,21 +161,46 @@ function searchUser() {
                         <option>2000</option>
                     </select>
                 </td>
+
                 <td>
                     <select onchange="this.className=this.value">
                         <option value="status-win">MENANG</option>
                         <option value="status-lose">KALAH</option>
                     </select>
                 </td>
+
                 <td>
-                    <input type="number" placeholder="Nominal">
+                    <input type="number" placeholder="Nominal Deposit">
+                </td>
+
+                <td>
+                    <select onchange="updateJackpot(this)">
+                        <option value="OFF">OFF</option>
+                        <option value="ON">ON</option>
+                    </select>
+                </td>
+
+                <td>
+                    <input type="number" placeholder="Nominal Jackpot">
+                    <select>
+                        <option>Manual</option>
+                        <option>Otomatis</option>
+                    </select>
                 </td>
             </tr>`;
         }
     });
 
     if (table.innerHTML === "") {
-        table.innerHTML = `<tr><td colspan="5">User tidak ditemukan</td></tr>`;
+        table.innerHTML = `<tr><td colspan="7">User tidak ditemukan</td></tr>`;
+    }
+}
+
+function updateJackpot(select) {
+    if (select.value === "ON") {
+        select.className = "jackpot-on";
+    } else {
+        select.className = "jackpot-off";
     }
 }
 </script>
