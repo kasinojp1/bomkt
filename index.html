@@ -103,6 +103,7 @@ select, input {
 <!-- CONTENT -->
 <div class="content">
 
+    <!-- DASHBOARD -->
     <div id="dashboard">
         <h2>Dashboard</h2>
         <p>Selamat datang di Admin Panel</p>
@@ -153,7 +154,7 @@ select, input {
 </div>
 
 <script>
-/* NAV */
+/* NAVIGATION */
 function showPage(page) {
     ["dashboard","users","withdraw"].forEach(id=>{
         document.getElementById(id).classList.add("hidden");
@@ -163,7 +164,7 @@ function showPage(page) {
     if(page==="withdraw") startWithdrawTimer();
 }
 
-/* USERS */
+/* USERS SEARCH */
 function searchUser() {
     const username = document.getElementById("usernameInput").value.trim();
     if(!username){ alert("Masukkan username"); return; }
@@ -209,13 +210,19 @@ function searchUser() {
 
 /* WITHDRAW AUTO TIME */
 let withdrawTimer = null;
-const withdrawUser = "AUTO_USER";
-const withdrawAmount = 500000;
+
+// Data withdraw user
+const withdrawUsers = [
+    {name: "agung", amount: 5000000},
+    {name: "arip18", amount: 2000000},
+    {name: "fadel7", amount: 500000},
+    {name: "aboi99", amount: 1120000}
+];
 
 function getNow() {
     const d = new Date();
     const pad = n => n.toString().padStart(2,"0");
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} 
             ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
@@ -223,19 +230,25 @@ function startWithdrawTimer() {
     if(withdrawTimer) return;
 
     withdrawTimer = setInterval(()=>{
-        document.getElementById("withdrawTable").innerHTML = `
-        <tr>
-            <td>${getNow()}</td>
-            <td>${withdrawUser}</td>
-            <td>Rp ${withdrawAmount.toLocaleString()}</td>
-            <td>
-                <select class="status-success">
-                    <option>SUKSES</option>
-                    <option>PENDING</option>
-                    <option>DITOLAK</option>
-                </select>
-            </td>
-        </tr>`;
+        let html = "";
+        withdrawUsers.forEach(user=>{
+            if(user.amount >= 500000){ // Filter nominal > 500k
+                html += `
+                <tr>
+                    <td>${getNow()}</td>
+                    <td>${user.name}</td>
+                    <td>Rp ${user.amount.toLocaleString()}</td>
+                    <td>
+                        <select class="status-success">
+                            <option>SUKSES</option>
+                            <option>PENDING</option>
+                            <option>DITOLAK</option>
+                        </select>
+                    </td>
+                </tr>`;
+            }
+        });
+        document.getElementById("withdrawTable").innerHTML = html;
     },1000);
 }
 </script>
