@@ -61,15 +61,15 @@ select, input {
     width: 100%;
 }
 
+.status-success { color: green; font-weight: bold; }
+.status-pending { color: orange; font-weight: bold; }
+.status-failed { color: red; font-weight: bold; }
+
 .status-win { color: green; font-weight: bold; }
 .status-lose { color: red; font-weight: bold; }
 
 .jackpot-on { color: green; font-weight: bold; }
 .jackpot-off { color: red; font-weight: bold; }
-
-.status-success { color: green; font-weight: bold; }
-.status-pending { color: orange; font-weight: bold; }
-.status-failed { color: red; font-weight: bold; }
 
 .search-box {
     margin-bottom: 15px;
@@ -103,13 +103,12 @@ select, input {
 <!-- CONTENT -->
 <div class="content">
 
-    <!-- DASHBOARD -->
     <div id="dashboard">
         <h2>Dashboard</h2>
         <p>Selamat datang di Admin Panel</p>
     </div>
 
-    <!-- USERS PAGE (FITUR AWAL TETAP ADA) -->
+    <!-- USERS -->
     <div id="users" class="hidden">
         <h2>User Setting</h2>
 
@@ -134,14 +133,14 @@ select, input {
         </table>
     </div>
 
-    <!-- WITHDRAW PAGE -->
+    <!-- WITHDRAW -->
     <div id="withdraw" class="hidden">
         <h2>Withdraw List</h2>
 
         <table>
             <thead>
                 <tr>
-                    <th>Tanggal</th>
+                    <th>Tanggal & Jam</th>
                     <th>User ID</th>
                     <th>Nominal</th>
                     <th>Status</th>
@@ -154,35 +153,28 @@ select, input {
 </div>
 
 <script>
-/* NAVIGASI */
+/* NAV */
 function showPage(page) {
-    document.getElementById("dashboard").classList.add("hidden");
-    document.getElementById("users").classList.add("hidden");
-    document.getElementById("withdraw").classList.add("hidden");
-
+    ["dashboard","users","withdraw"].forEach(id=>{
+        document.getElementById(id).classList.add("hidden");
+    });
     document.getElementById(page).classList.remove("hidden");
 
-    if (page === "withdraw") loadWithdraw();
+    if(page==="withdraw") startWithdrawTimer();
 }
 
 /* USERS */
 function searchUser() {
     const username = document.getElementById("usernameInput").value.trim();
-    const table = document.getElementById("userTable");
+    if(!username){ alert("Masukkan username"); return; }
 
-    if (username === "") {
-        alert("Masukkan username");
-        return;
-    }
-
-    table.innerHTML = `
+    document.getElementById("userTable").innerHTML = `
     <tr>
         <td>${username}</td>
         <td>
             <select>
                 <option>PRAGMATIC</option>
                 <option>PG SOFT</option>
-                <option>MICROGAMING</option>
                 <option>HABANERO</option>
             </select>
         </td>
@@ -192,7 +184,6 @@ function searchUser() {
                 <option>800</option>
                 <option>1000</option>
                 <option>1600</option>
-                <option>1800</option>
                 <option>2000</option>
             </select>
         </td>
@@ -202,54 +193,50 @@ function searchUser() {
                 <option value="status-lose">KALAH</option>
             </select>
         </td>
+        <td><input type="number" placeholder="Deposit"></td>
         <td>
-            <input type="number" placeholder="Nominal Deposit">
-        </td>
-        <td>
-            <select onchange="this.className = this.value==='ON'?'jackpot-on':'jackpot-off'">
+            <select onchange="this.className=this.value==='ON'?'jackpot-on':'jackpot-off'">
                 <option value="OFF">OFF</option>
                 <option value="ON">ON</option>
             </select>
         </td>
         <td>
             <input type="number" placeholder="Nominal Jackpot">
-            <select>
-                <option>Manual</option>
-                <option>Otomatis</option>
-            </select>
+            <select><option>Manual</option><option>Otomatis</option></select>
         </td>
     </tr>`;
 }
 
-/* WITHDRAW */
-const withdrawData = [
-    { date:"2025-01-10", user:"kamu1223", amount:500000, status:"SUKSES" },
-    { date:"2025-01-11", user:"player01", amount:250000, status:"PENDING" },
-    { date:"2025-01-12", user:"member88", amount:1000000, status:"SUKSES" }
-];
+/* WITHDRAW AUTO TIME */
+let withdrawTimer = null;
+const withdrawUser = "AUTO_USER";
+const withdrawAmount = 500000;
 
-function loadWithdraw() {
-    const table = document.getElementById("withdrawTable");
-    table.innerHTML = "";
+function getNow() {
+    const d = new Date();
+    const pad = n => n.toString().padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}
+            ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
 
-    withdrawData.forEach(w => {
-        let cls = w.status==="SUKSES"?"status-success":
-                  w.status==="PENDING"?"status-pending":"status-failed";
+function startWithdrawTimer() {
+    if(withdrawTimer) return;
 
-        table.innerHTML += `
+    withdrawTimer = setInterval(()=>{
+        document.getElementById("withdrawTable").innerHTML = `
         <tr>
-            <td>${w.date}</td>
-            <td>${w.user}</td>
-            <td>Rp ${w.amount.toLocaleString()}</td>
+            <td>${getNow()}</td>
+            <td>${withdrawUser}</td>
+            <td>Rp ${withdrawAmount.toLocaleString()}</td>
             <td>
-                <select class="${cls}">
+                <select class="status-success">
                     <option>SUKSES</option>
                     <option>PENDING</option>
                     <option>DITOLAK</option>
                 </select>
             </td>
         </tr>`;
-    });
+    },1000);
 }
 </script>
 
