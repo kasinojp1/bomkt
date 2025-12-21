@@ -39,17 +39,7 @@ body {
     padding: 20px;
 }
 
-.search-box {
-    margin-bottom: 15px;
-}
-.search-box input {
-    padding: 8px;
-    width: 240px;
-}
-.search-box button {
-    padding: 8px 15px;
-    cursor: pointer;
-}
+.hidden { display: none; }
 
 table {
     width: 100%;
@@ -66,27 +56,25 @@ th {
     color: #fff;
 }
 
-select, input[type="number"] {
+select, input {
     padding: 5px;
-    width: 100%;
 }
 
-.status-win { color: green; font-weight: bold; }
-.status-lose { color: red; font-weight: bold; }
-
-.jackpot-on { color: green; font-weight: bold; }
-.jackpot-off { color: red; font-weight: bold; }
+.status-success { color: green; font-weight: bold; }
+.status-pending { color: orange; font-weight: bold; }
+.status-failed { color: red; font-weight: bold; }
 </style>
 </head>
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
     <h2>MASTER</h2>
     <ul>
-        <li>Dashboard</li>
+        <li onclick="showPage('dashboard')">Dashboard</li>
+        <li onclick="showPage('withdraw')">Withdraw</li>
         <li>Deposit</li>
-        <li>Withdraw</li>
         <li>Report</li>
         <li>Users</li>
         <li>Win / Lose</li>
@@ -94,91 +82,73 @@ select, input[type="number"] {
     </ul>
 </div>
 
+<!-- CONTENT -->
 <div class="content">
 
-    <div class="search-box">
-        <input type="text" id="usernameInput" placeholder="Masukkan Username">
-        <button onclick="searchUser()">SEARCH</button>
+    <!-- DASHBOARD -->
+    <div id="dashboard">
+        <h2>Dashboard</h2>
+        <p>Selamat datang di Admin Panel</p>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Provider</th>
-                <th>Taruhan</th>
-                <th>Status</th>
-                <th>Deposit</th>
-                <th>Jackpot</th>
-                <th>Setting Jackpot</th>
-            </tr>
-        </thead>
-        <tbody id="resultTable"></tbody>
-    </table>
+    <!-- WITHDRAW PAGE -->
+    <div id="withdraw" class="hidden">
+        <h2>Withdraw List</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>User ID</th>
+                    <th>Nominal Withdraw</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="withdrawTable"></tbody>
+        </table>
+    </div>
 
 </div>
 
 <script>
-function searchUser() {
-    const username = document.getElementById("usernameInput").value.trim();
-    const table = document.getElementById("resultTable");
+const withdrawData = [
+    { date: "2025-01-10", user: "kamu1223", amount: 500000, status: "SUKSES" },
+    { date: "2025-01-11", user: "player01", amount: 250000, status: "PENDING" },
+    { date: "2025-01-12", user: "member88", amount: 1000000, status: "SUKSES" }
+];
 
-    if (username === "") {
-        alert("Masukkan username terlebih dahulu");
-        return;
-    }
+function showPage(page) {
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("withdraw").classList.add("hidden");
 
-    table.innerHTML = `
-    <tr>
-        <td>${username}</td>
+    document.getElementById(page).classList.remove("hidden");
 
-        <td>
-            <select>
-                <option>PRAGMATIC</option>
-                <option>PG SOFT</option>
-                <option>MICROGAMING</option>
-                <option>HABANERO</option>
-                <option>JOKER</option>
-            </select>
-        </td>
+    if (page === "withdraw") loadWithdraw();
+}
 
-        <td>
-            <select>
-                <option>400</option>
-                <option>800</option>
-                <option>1000</option>
-                <option>1600</option>
-                <option>1800</option>
-                <option>2000</option>
-            </select>
-        </td>
+function loadWithdraw() {
+    const table = document.getElementById("withdrawTable");
+    table.innerHTML = "";
 
-        <td>
-            <select onchange="this.className=this.value">
-                <option value="status-win">MENANG</option>
-                <option value="status-lose">KALAH</option>
-            </select>
-        </td>
+    withdrawData.forEach(w => {
+        let statusClass = 
+            w.status === "SUKSES" ? "status-success" :
+            w.status === "PENDING" ? "status-pending" : "status-failed";
 
-        <td>
-            <input type="number" placeholder="Nominal Deposit">
-        </td>
-
-        <td>
-            <select onchange="this.className = this.value === 'ON' ? 'jackpot-on' : 'jackpot-off'">
-                <option value="OFF">OFF</option>
-                <option value="ON">ON</option>
-            </select>
-        </td>
-
-        <td>
-            <input type="number" placeholder="Nominal Jackpot">
-            <select>
-                <option>Manual</option>
-                <option>Otomatis</option>
-            </select>
-        </td>
-    </tr>`;
+        table.innerHTML += `
+        <tr>
+            <td>${w.date}</td>
+            <td>${w.user}</td>
+            <td>Rp ${w.amount.toLocaleString()}</td>
+            <td>
+                <select class="${statusClass}">
+                    <option ${w.status==="SUKSES"?"selected":""}>SUKSES</option>
+                    <option ${w.status==="PENDING"?"selected":""}>PENDING</option>
+                    <option ${w.status==="DITOLAK"?"selected":""}>DITOLAK</option>
+                </select>
+            </td>
+        </tr>`;
+    });
 }
 </script>
 
