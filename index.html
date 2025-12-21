@@ -58,11 +58,29 @@ th {
 
 select, input {
     padding: 5px;
+    width: 100%;
 }
+
+.status-win { color: green; font-weight: bold; }
+.status-lose { color: red; font-weight: bold; }
+
+.jackpot-on { color: green; font-weight: bold; }
+.jackpot-off { color: red; font-weight: bold; }
 
 .status-success { color: green; font-weight: bold; }
 .status-pending { color: orange; font-weight: bold; }
 .status-failed { color: red; font-weight: bold; }
+
+.search-box {
+    margin-bottom: 15px;
+}
+.search-box input {
+    padding: 8px;
+    width: 240px;
+}
+.search-box button {
+    padding: 8px 15px;
+}
 </style>
 </head>
 
@@ -73,10 +91,10 @@ select, input {
     <h2>MASTER</h2>
     <ul>
         <li onclick="showPage('dashboard')">Dashboard</li>
+        <li onclick="showPage('users')">Users</li>
         <li onclick="showPage('withdraw')">Withdraw</li>
         <li>Deposit</li>
         <li>Report</li>
-        <li>Users</li>
         <li>Win / Lose</li>
         <li>Web Setting</li>
     </ul>
@@ -91,6 +109,31 @@ select, input {
         <p>Selamat datang di Admin Panel</p>
     </div>
 
+    <!-- USERS PAGE (FITUR AWAL TETAP ADA) -->
+    <div id="users" class="hidden">
+        <h2>User Setting</h2>
+
+        <div class="search-box">
+            <input type="text" id="usernameInput" placeholder="Masukkan Username">
+            <button onclick="searchUser()">SEARCH</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Provider</th>
+                    <th>Taruhan</th>
+                    <th>Status</th>
+                    <th>Deposit</th>
+                    <th>Jackpot</th>
+                    <th>Setting Jackpot</th>
+                </tr>
+            </thead>
+            <tbody id="userTable"></tbody>
+        </table>
+    </div>
+
     <!-- WITHDRAW PAGE -->
     <div id="withdraw" class="hidden">
         <h2>Withdraw List</h2>
@@ -100,7 +143,7 @@ select, input {
                 <tr>
                     <th>Tanggal</th>
                     <th>User ID</th>
-                    <th>Nominal Withdraw</th>
+                    <th>Nominal</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -111,14 +154,10 @@ select, input {
 </div>
 
 <script>
-const withdrawData = [
-    { date: "2025-01-10", user: "kamu1223", amount: 500000, status: "SUKSES" },
-    { date: "2025-01-11", user: "player01", amount: 250000, status: "PENDING" },
-    { date: "2025-01-12", user: "member88", amount: 1000000, status: "SUKSES" }
-];
-
+/* NAVIGASI */
 function showPage(page) {
     document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("users").classList.add("hidden");
     document.getElementById("withdraw").classList.add("hidden");
 
     document.getElementById(page).classList.remove("hidden");
@@ -126,14 +165,76 @@ function showPage(page) {
     if (page === "withdraw") loadWithdraw();
 }
 
+/* USERS */
+function searchUser() {
+    const username = document.getElementById("usernameInput").value.trim();
+    const table = document.getElementById("userTable");
+
+    if (username === "") {
+        alert("Masukkan username");
+        return;
+    }
+
+    table.innerHTML = `
+    <tr>
+        <td>${username}</td>
+        <td>
+            <select>
+                <option>PRAGMATIC</option>
+                <option>PG SOFT</option>
+                <option>MICROGAMING</option>
+                <option>HABANERO</option>
+            </select>
+        </td>
+        <td>
+            <select>
+                <option>400</option>
+                <option>800</option>
+                <option>1000</option>
+                <option>1600</option>
+                <option>1800</option>
+                <option>2000</option>
+            </select>
+        </td>
+        <td>
+            <select onchange="this.className=this.value">
+                <option value="status-win">MENANG</option>
+                <option value="status-lose">KALAH</option>
+            </select>
+        </td>
+        <td>
+            <input type="number" placeholder="Nominal Deposit">
+        </td>
+        <td>
+            <select onchange="this.className = this.value==='ON'?'jackpot-on':'jackpot-off'">
+                <option value="OFF">OFF</option>
+                <option value="ON">ON</option>
+            </select>
+        </td>
+        <td>
+            <input type="number" placeholder="Nominal Jackpot">
+            <select>
+                <option>Manual</option>
+                <option>Otomatis</option>
+            </select>
+        </td>
+    </tr>`;
+}
+
+/* WITHDRAW */
+const withdrawData = [
+    { date:"2025-01-10", user:"kamu1223", amount:500000, status:"SUKSES" },
+    { date:"2025-01-11", user:"player01", amount:250000, status:"PENDING" },
+    { date:"2025-01-12", user:"member88", amount:1000000, status:"SUKSES" }
+];
+
 function loadWithdraw() {
     const table = document.getElementById("withdrawTable");
     table.innerHTML = "";
 
     withdrawData.forEach(w => {
-        let statusClass = 
-            w.status === "SUKSES" ? "status-success" :
-            w.status === "PENDING" ? "status-pending" : "status-failed";
+        let cls = w.status==="SUKSES"?"status-success":
+                  w.status==="PENDING"?"status-pending":"status-failed";
 
         table.innerHTML += `
         <tr>
@@ -141,10 +242,10 @@ function loadWithdraw() {
             <td>${w.user}</td>
             <td>Rp ${w.amount.toLocaleString()}</td>
             <td>
-                <select class="${statusClass}">
-                    <option ${w.status==="SUKSES"?"selected":""}>SUKSES</option>
-                    <option ${w.status==="PENDING"?"selected":""}>PENDING</option>
-                    <option ${w.status==="DITOLAK"?"selected":""}>DITOLAK</option>
+                <select class="${cls}">
+                    <option>SUKSES</option>
+                    <option>PENDING</option>
+                    <option>DITOLAK</option>
                 </select>
             </td>
         </tr>`;
