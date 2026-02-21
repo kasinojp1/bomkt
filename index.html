@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Admin Panel Premium</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 :root {
     --dark: #1e272e;
@@ -134,6 +135,50 @@ select, input {
     font-weight: bold;
     color: #3742fa;
 }
+
+/* Toggle Switch Jackpot */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  transition: .3s;
+  border-radius: 50px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #27ae60;
+}
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+.jackpot-status {
+  font-weight: bold;
+  margin-left: 8px;
+}
+.jackpot-on { color: #27ae60; }
+.jackpot-off { color: #e74c3c; }
 </style>
 </head>
 
@@ -214,14 +259,44 @@ function searchUser() {
     document.getElementById("userTable").innerHTML = `
     <tr>
         <td>${username}</td>
-        <td><select><option>PRAGMATIC</option><option>PG SOFT</option></select></td>
-        <td><select><option>400</option><option>800</option></select></td>
-        <td><span class="badge-success">MENANG</span></td>
-        <td><input type="number" placeholder="Deposit"></td>
-        <td><span class="badge-pending">OFF</span></td>
+        <td>
+            <select>
+                <option>PRAGMATIC</option>
+                <option>PG SOFT</option>
+                <option>HABANERO</option>
+            </select>
+        </td>
+        <td>
+            <select>
+                <option>400</option>
+                <option>800</option>
+                <option>1000</option>
+            </select>
+        </td>
+        <td>
+            <span class="badge-success">MENANG</span>
+        </td>
+        <td>
+            <input type="number" placeholder="Deposit">
+        </td>
+        <td>
+            <label class="switch">
+              <input type="checkbox" onchange="toggleJackpot(this)">
+              <span class="slider"></span>
+            </label>
+            <span class="jackpot-status jackpot-off">OFF</span>
+        </td>
     </tr>`;
 }
 
+function toggleJackpot(el) {
+    const status = el.checked ? "ON" : "OFF";
+    const statusEl = el.closest("td").querySelector(".jackpot-status");
+    statusEl.textContent = status;
+    statusEl.className = "jackpot-status " + (el.checked ? "jackpot-on" : "jackpot-off");
+}
+
+/* Withdraw */
 let withdrawTimer = null;
 let currentWithdrawId = generateWithdrawId();
 
@@ -238,7 +313,7 @@ function generateWithdrawId() {
 
 setInterval(()=>{
     currentWithdrawId = generateWithdrawId();
-}, 300000); // ganti tiap 5 menit
+}, 300000); // 5 menit
 
 function getNow() {
     const d = new Date();
