@@ -2,255 +2,227 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<title>Admin Panel Premium</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
 
-.sidebar {
-    width: 220px;
-    height: 100vh;
-    background: #2f3542;
-    color: #fff;
-    position: fixed;
-    padding: 15px;
-}
-.sidebar h2 {
-    color: #fbc531;
-    text-align: center;
-}
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-.sidebar ul li {
-    padding: 10px;
-    cursor: pointer;
-}
-.sidebar ul li:hover {
-    background: #57606f;
+body{
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:#fff;
 }
 
-.content {
-    margin-left: 240px;
-    padding: 20px;
+/* SIDEBAR */
+.sidebar{
+    width:240px;
+    height:100vh;
+    background:rgba(0,0,0,0.9);
+    position:fixed;
+    padding:25px 20px;
+    border-right:1px solid rgba(255,215,0,0.3);
 }
 
-.hidden { display: none; }
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-}
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-th {
-    background: #2f3542;
-    color: #fff;
+.sidebar h2{
+    text-align:center;
+    color:#ffd700;
+    margin-bottom:25px;
 }
 
-select, input {
-    padding: 5px;
-    width: 100%;
+.sidebar ul{
+    list-style:none;
 }
 
-.status-success { color: green; font-weight: bold; }
-.status-pending { color: orange; font-weight: bold; }
-.status-failed { color: red; font-weight: bold; }
-
-.status-win { color: green; font-weight: bold; }
-.status-lose { color: red; font-weight: bold; }
-
-.jackpot-on { color: green; font-weight: bold; }
-.jackpot-off { color: red; font-weight: bold; }
-
-.search-box {
-    margin-bottom: 15px;
+.sidebar ul li{
+    padding:12px;
+    margin-bottom:10px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.3s;
 }
-.search-box input {
-    padding: 8px;
-    width: 240px;
+
+.sidebar ul li:hover{
+    background:linear-gradient(45deg,#ffd700,#ffb300);
+    color:#000;
 }
-.search-box button {
-    padding: 8px 15px;
+
+/* CONTENT */
+.content{
+    margin-left:260px;
+    padding:30px;
 }
+
+.content h2{
+    color:#ffd700;
+    margin-bottom:20px;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:rgba(255,255,255,0.05);
+    border-radius:15px;
+    overflow:hidden;
+}
+
+th{
+    background:linear-gradient(45deg,#ffd700,#ffb300);
+    color:#000;
+    padding:15px;
+}
+
+td{
+    padding:12px;
+    text-align:center;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+tr:hover{
+    background:rgba(255,255,255,0.08);
+}
+
+/* INPUT */
+input,select{
+    padding:8px;
+    border-radius:8px;
+    border:none;
+    background:rgba(255,255,255,0.1);
+    color:#fff;
+}
+
+button{
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(45deg,#ffd700,#ffb300);
+    color:#000;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.hidden{display:none;}
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
     <h2>MASTER</h2>
     <ul>
         <li onclick="showPage('dashboard')">Dashboard</li>
         <li onclick="showPage('users')">Users</li>
         <li onclick="showPage('withdraw')">Withdraw</li>
-        <li>Deposit</li>
-        <li>Report</li>
-        <li>Win / Lose</li>
-        <li>Web Setting</li>
     </ul>
 </div>
 
-<!-- CONTENT -->
 <div class="content">
 
-    <!-- DASHBOARD -->
-    <div id="dashboard">
-        <h2>Dashboard</h2>
-        <p>Selamat datang di Admin Panel</p>
-    </div>
+<div id="dashboard">
+    <h2>Dashboard</h2>
+    <p>Selamat datang di Admin Panel Premium</p>
+</div>
 
-    <!-- USERS -->
-    <div id="users" class="hidden">
-        <h2>User Setting</h2>
+<div id="users" class="hidden">
+    <h2>User Setting</h2>
+    <input type="text" placeholder="Masukkan Username">
+</div>
 
-        <div class="search-box">
-            <input type="text" id="usernameInput" placeholder="Masukkan Username">
-            <button onclick="searchUser()">SEARCH</button>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Provider</th>
-                    <th>Taruhan</th>
-                    <th>Status</th>
-                    <th>Deposit</th>
-                    <th>Jackpot</th>
-                    <th>Setting Jackpot</th>
-                </tr>
-            </thead>
-            <tbody id="userTable"></tbody>
-        </table>
-    </div>
-
-    <!-- WITHDRAW -->
-    <div id="withdraw" class="hidden">
-        <h2>Withdraw List</h2>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Tanggal & Jam</th>
-                    <th>User ID</th>
-                    <th>Nominal</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="withdrawTable"></tbody>
-        </table>
-    </div>
+<div id="withdraw" class="hidden">
+    <h2>Withdraw List (Auto Update 5 Menit)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal & Jam</th>
+                <th>User ID</th>
+                <th>Nominal</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="withdrawTable"></tbody>
+    </table>
+</div>
 
 </div>
 
 <script>
+
 /* NAVIGATION */
-function showPage(page) {
+function showPage(page){
     ["dashboard","users","withdraw"].forEach(id=>{
         document.getElementById(id).classList.add("hidden");
     });
     document.getElementById(page).classList.remove("hidden");
-
-    if(page==="withdraw") startWithdrawTimer();
 }
 
-/* USERS SEARCH */
-function searchUser() {
-    const username = document.getElementById("usernameInput").value.trim();
-    if(!username){ alert("Masukkan username"); return; }
+/* ===== RANDOM WITHDRAW SYSTEM ===== */
 
-    document.getElementById("userTable").innerHTML = `
-    <tr>
-        <td>${username}</td>
-        <td>
-            <select>
-                <option>PRAGMATIC</option>
-                <option>PG SOFT</option>
-                <option>HABANERO</option>
-            </select>
-        </td>
-        <td>
-            <select>
-                <option>400</option>
-                <option>800</option>
-                <option>1000</option>
-                <option>1600</option>
-                <option>2000</option>
-            </select>
-        </td>
-        <td>
-            <select onchange="this.className=this.value">
-                <option value="status-win">MENANG</option>
-                <option value="status-lose">KALAH</option>
-            </select>
-        </td>
-        <td><input type="number" placeholder="Deposit"></td>
-        <td>
-            <select onchange="this.className=this.value==='ON'?'jackpot-on':'jackpot-off'">
-                <option value="OFF">OFF</option>
-                <option value="ON">ON</option>
-            </select>
-        </td>
-        <td>
-            <input type="number" placeholder="Nominal Jackpot">
-            <select><option>Manual</option><option>Otomatis</option></select>
-        </td>
-    </tr>`;
+let withdrawData = [];
+
+function randomUser(){
+    const chars="abcdefghijklmnopqrstuvwxyz0123456789";
+    let name="";
+    for(let i=0;i<8;i++){
+        name+=chars[Math.floor(Math.random()*chars.length)];
+    }
+    return name;
 }
 
-/* WITHDRAW AUTO TIME */
-let withdrawTimer = null;
+function randomAmount(){
+    return Math.floor(Math.random()*9000000)+500000;
+}
 
-// Data withdraw user
-const withdrawUsers = [
-    {name: "monye96", amount: 5000000},
-    {name: "jakarta", amount: 2000000},
-    {name: "cuki87", amount: 500000},
-    {name: "dewos6", amount: 1120000}
-];
+function generateWithdrawData(){
+    withdrawData=[];
+    for(let i=0;i<6;i++){
+        withdrawData.push({
+            name:randomUser(),
+            amount:randomAmount()
+        });
+    }
+}
 
-function getNow() {
-    const d = new Date();
-    const pad = n => n.toString().padStart(2,"0");
+/* generate awal */
+generateWithdrawData();
+
+/* regenerate setiap 5 menit */
+setInterval(generateWithdrawData,300000);
+
+/* realtime clock */
+function getNow(){
+    const d=new Date();
+    const pad=n=>n.toString().padStart(2,"0");
     return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} 
             ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
-function startWithdrawTimer() {
-    if(withdrawTimer) return;
+/* update tabel tiap detik */
+setInterval(()=>{
+    let html="";
+    withdrawData.forEach(user=>{
+        html+=`
+        <tr>
+            <td>${getNow()}</td>
+            <td>${user.name}</td>
+            <td>Rp ${user.amount.toLocaleString()}</td>
+            <td>
+                <select>
+                    <option>SUKSES</option>
+                    <option>PENDING</option>
+                    <option>DITOLAK</option>
+                </select>
+            </td>
+        </tr>`;
+    });
+    document.getElementById("withdrawTable").innerHTML=html;
+},1000);
 
-    withdrawTimer = setInterval(()=>{
-        let html = "";
-        withdrawUsers.forEach(user=>{
-            if(user.amount >= 500000){ // Filter nominal > 500k
-                html += `
-                <tr>
-                    <td>${getNow()}</td>
-                    <td>${user.name}</td>
-                    <td>Rp ${user.amount.toLocaleString()}</td>
-                    <td>
-                        <select class="status-success">
-                            <option>SUKSES</option>
-                            <option>PENDING</option>
-                            <option>DITOLAK</option>
-                        </select>
-                    </td>
-                </tr>`;
-            }
-        });
-        document.getElementById("withdrawTable").innerHTML = html;
-    },1000);
-}
 </script>
 
 </body>
