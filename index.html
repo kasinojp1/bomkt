@@ -3,111 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <title>Admin Panel Premium</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+:root {
+    --dark: #1e272e;
+    --primary: #fbc531;
+    --card: #ffffff;
+    --bg: #f1f2f6;
 }
 
-body{
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    color:#fff;
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
 }
 
-/* SIDEBAR */
-.sidebar{
-    width:240px;
-    height:100vh;
-    background:rgba(0,0,0,0.9);
-    position:fixed;
-    padding:25px 20px;
-    border-right:1px solid rgba(255,215,0,0.3);
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: linear-gradient(180deg, #1e272e, #2f3542);
+    color: #fff;
+    position: fixed;
+    padding: 20px;
+    box-shadow: 4px 0 20px rgba(0,0,0,.2);
 }
 
-.sidebar h2{
-    text-align:center;
-    color:#ffd700;
-    margin-bottom:25px;
+.sidebar h2 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
 }
 
-.sidebar ul{
-    list-style:none;
+.sidebar ul {
+    list-style: none;
+    padding: 0;
 }
 
-.sidebar ul li{
-    padding:12px;
-    margin-bottom:10px;
-    border-radius:10px;
-    cursor:pointer;
-    transition:.3s;
+.sidebar ul li {
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: .3s;
 }
 
-.sidebar ul li:hover{
-    background:linear-gradient(45deg,#ffd700,#ffb300);
-    color:#000;
+.sidebar ul li:hover {
+    background: rgba(255,255,255,.1);
+    transform: translateX(5px);
 }
 
-/* CONTENT */
-.content{
-    margin-left:260px;
-    padding:30px;
+.content {
+    margin-left: 270px;
+    padding: 25px;
 }
 
-.content h2{
-    color:#ffd700;
-    margin-bottom:20px;
+.card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+    animation: fade .4s ease;
 }
 
-/* TABLE */
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:rgba(255,255,255,0.05);
-    border-radius:15px;
-    overflow:hidden;
+@keyframes fade {
+    from {opacity:0; transform: translateY(10px);}
+    to {opacity:1; transform: translateY(0);}
 }
 
-th{
-    background:linear-gradient(45deg,#ffd700,#ffb300);
-    color:#000;
-    padding:15px;
+.hidden { display: none; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-td{
-    padding:12px;
-    text-align:center;
-    border-bottom:1px solid rgba(255,255,255,0.1);
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
 }
 
-tr:hover{
-    background:rgba(255,255,255,0.08);
+th {
+    background: var(--dark);
+    color: #fff;
+    font-weight: 600;
 }
 
-/* INPUT */
-input,select{
-    padding:8px;
-    border-radius:8px;
-    border:none;
-    background:rgba(255,255,255,0.1);
-    color:#fff;
+tr:hover td {
+    background: #fafafa;
 }
 
-button{
-    padding:8px 15px;
-    border:none;
-    border-radius:8px;
-    background:linear-gradient(45deg,#ffd700,#ffb300);
-    color:#000;
-    cursor:pointer;
-    font-weight:600;
+select, input {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
 }
 
-.hidden{display:none;}
+.badge-success { color:#27ae60; font-weight:700; }
+.badge-pending { color:#f39c12; font-weight:700; }
+.badge-failed  { color:#e74c3c; font-weight:700; }
+
+.search-box {
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    padding: 10px;
+    width: 240px;
+    border-radius: 8px;
+    border:1px solid #ddd;
+}
+
+.search-box button {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: var(--dark);
+    color: #fff;
+    cursor: pointer;
+}
+
+.withdraw-id {
+    font-weight: bold;
+    color: #3742fa;
+}
 </style>
 </head>
 
@@ -116,113 +142,127 @@ button{
 <div class="sidebar">
     <h2>MASTER</h2>
     <ul>
-        <li onclick="showPage('dashboard')">Dashboard</li>
-        <li onclick="showPage('users')">Users</li>
-        <li onclick="showPage('withdraw')">Withdraw</li>
+        <li onclick="showPage('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</li>
+        <li onclick="showPage('users')"><i class="fa-solid fa-users"></i> Users</li>
+        <li onclick="showPage('withdraw')"><i class="fa-solid fa-money-bill-transfer"></i> Withdraw</li>
+        <li><i class="fa-solid fa-wallet"></i> Deposit</li>
+        <li><i class="fa-solid fa-chart-line"></i> Report</li>
+        <li><i class="fa-solid fa-trophy"></i> Win / Lose</li>
+        <li><i class="fa-solid fa-gear"></i> Web Setting</li>
     </ul>
 </div>
 
 <div class="content">
 
-<div id="dashboard">
-    <h2>Dashboard</h2>
-    <p>Selamat datang di Admin Panel Premium</p>
-</div>
+    <div id="dashboard" class="card">
+        <h2>Dashboard</h2>
+        <p>Selamat datang di Admin Panel Premium</p>
+    </div>
 
-<div id="users" class="hidden">
-    <h2>User Setting</h2>
-    <input type="text" placeholder="Masukkan Username">
-</div>
+    <div id="users" class="hidden card">
+        <h2>User Setting</h2>
+        <div class="search-box">
+            <input type="text" id="usernameInput" placeholder="Masukkan Username">
+            <button onclick="searchUser()">SEARCH</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Provider</th>
+                    <th>Taruhan</th>
+                    <th>Status</th>
+                    <th>Deposit</th>
+                    <th>Jackpot</th>
+                </tr>
+            </thead>
+            <tbody id="userTable"></tbody>
+        </table>
+    </div>
 
-<div id="withdraw" class="hidden">
-    <h2>Withdraw List (Auto Update 5 Menit)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Tanggal & Jam</th>
-                <th>User ID</th>
-                <th>Nominal</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody id="withdrawTable"></tbody>
-    </table>
-</div>
+    <div id="withdraw" class="hidden card">
+        <h2>Withdraw List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tanggal & Jam</th>
+                    <th>Withdraw ID</th>
+                    <th>User ID</th>
+                    <th>Nominal</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="withdrawTable"></tbody>
+        </table>
+    </div>
 
 </div>
 
 <script>
-
-/* NAVIGATION */
-function showPage(page){
+function showPage(page) {
     ["dashboard","users","withdraw"].forEach(id=>{
         document.getElementById(id).classList.add("hidden");
     });
     document.getElementById(page).classList.remove("hidden");
+    if(page==="withdraw") startWithdrawTimer();
 }
 
-/* ===== RANDOM WITHDRAW SYSTEM ===== */
+function searchUser() {
+    const username = document.getElementById("usernameInput").value.trim();
+    if(!username){ alert("Masukkan username"); return; }
 
-let withdrawData = [];
-
-function randomUser(){
-    const chars="abcdefghijklmnopqrstuvwxyz0123456789";
-    let name="";
-    for(let i=0;i<8;i++){
-        name+=chars[Math.floor(Math.random()*chars.length)];
-    }
-    return name;
+    document.getElementById("userTable").innerHTML = `
+    <tr>
+        <td>${username}</td>
+        <td><select><option>PRAGMATIC</option><option>PG SOFT</option></select></td>
+        <td><select><option>400</option><option>800</option></select></td>
+        <td><span class="badge-success">MENANG</span></td>
+        <td><input type="number" placeholder="Deposit"></td>
+        <td><span class="badge-pending">OFF</span></td>
+    </tr>`;
 }
 
-function randomAmount(){
-    return Math.floor(Math.random()*9000000)+500000;
+let withdrawTimer = null;
+let currentWithdrawId = generateWithdrawId();
+
+const withdrawUsers = [
+    {name: "monye96", amount: 5000000},
+    {name: "jakarta", amount: 2000000},
+    {name: "cuki87", amount: 500000},
+    {name: "dewos6", amount: 1120000}
+];
+
+function generateWithdrawId() {
+    return "WD-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
-function generateWithdrawData(){
-    withdrawData=[];
-    for(let i=0;i<6;i++){
-        withdrawData.push({
-            name:randomUser(),
-            amount:randomAmount()
-        });
-    }
-}
-
-/* generate awal */
-generateWithdrawData();
-
-/* regenerate setiap 5 menit */
-setInterval(generateWithdrawData,300000);
-
-/* realtime clock */
-function getNow(){
-    const d=new Date();
-    const pad=n=>n.toString().padStart(2,"0");
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} 
-            ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-
-/* update tabel tiap detik */
 setInterval(()=>{
-    let html="";
-    withdrawData.forEach(user=>{
-        html+=`
-        <tr>
-            <td>${getNow()}</td>
-            <td>${user.name}</td>
-            <td>Rp ${user.amount.toLocaleString()}</td>
-            <td>
-                <select>
-                    <option>SUKSES</option>
-                    <option>PENDING</option>
-                    <option>DITOLAK</option>
-                </select>
-            </td>
-        </tr>`;
-    });
-    document.getElementById("withdrawTable").innerHTML=html;
-},1000);
+    currentWithdrawId = generateWithdrawId();
+}, 300000); // ganti tiap 5 menit
 
+function getNow() {
+    const d = new Date();
+    const pad = n => n.toString().padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function startWithdrawTimer() {
+    if(withdrawTimer) return;
+    withdrawTimer = setInterval(()=>{
+        let html = "";
+        withdrawUsers.forEach(user=>{
+            html += `
+            <tr>
+                <td>${getNow()}</td>
+                <td class="withdraw-id">${currentWithdrawId}</td>
+                <td>${user.name}</td>
+                <td>Rp ${user.amount.toLocaleString()}</td>
+                <td><span class="badge-success">SUKSES</span></td>
+            </tr>`;
+        });
+        document.getElementById("withdrawTable").innerHTML = html;
+    },1000);
+}
 </script>
 
 </body>
